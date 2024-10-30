@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,7 +22,7 @@ fun TopProfileBar() {
                 Icon(Icons.Filled.Settings, contentDescription = "설정")
             }
         },
-        backgroundColor = MaterialTheme.colors.surface,
+        backgroundColor = Color.White,
         elevation = 0.dp
     )
 }

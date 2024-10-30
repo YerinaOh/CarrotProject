@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -69,9 +70,13 @@ fun ProfileScreen() {
         ))
     )
 
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+    ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().background(Color.White),
             contentPadding = PaddingValues(vertical = 8.dp)
         ) {
             item {
@@ -79,7 +84,20 @@ fun ProfileScreen() {
             }
             sections.forEach { section ->
                 item {
-                    SectionHeader(title = section.title)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                    ) {
+                        SectionHeader(title = section.title)
+                        Divider(
+                            color = Color.LightGray,
+                            thickness = 1.dp,
+                            modifier = Modifier
+                                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                        )
+                    }
+
                 }
                 items(section.items) { item ->
                     SectionItem(text = item.text, icon = item.icon)
@@ -100,7 +118,7 @@ fun SectionHeader(title: String) {
         fontSize = 18.sp,
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.LightGray.copy(alpha = 0.3f))
+            .background(Color.White)
             .padding(horizontal = 16.dp, vertical = 8.dp)
     )
 }

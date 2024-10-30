@@ -1,5 +1,6 @@
 package com.example.myapplication.Home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,7 +29,7 @@ fun TopHomeBar() {
     TopAppBar(
         backgroundColor = Color.White,
         elevation = 0.dp,
-        modifier = Modifier.height(100.dp)
+        modifier = Modifier.height(100.dp).background(Color.White)
     ) {
         Row(
             modifier = Modifier

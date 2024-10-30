@@ -1,6 +1,7 @@
 package com.example.myapplication.profile
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,11 +13,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +35,7 @@ fun ProfileBanner() {
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp)
+            .background(Color.White)
     ) {
         Column {
             Row(
@@ -56,6 +62,21 @@ fun ProfileBanner() {
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
+        // 남은 공간을 채우는 Spacer
+                Spacer(modifier = Modifier.weight(1f))
+                // 프로필 보기 버튼
+                Button(
+                    onClick = { /* 프로필 보기 동작 */ },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+                    shape = RoundedCornerShape(50),
+                    modifier = Modifier.height(30.dp)
+                ) {
+                    Text(
+                        "프로필 보기",
+                        color = Color.Black,
+                        fontSize = 12.sp
+                    )
+                }
             }
             // 페이 이미지
             Image(

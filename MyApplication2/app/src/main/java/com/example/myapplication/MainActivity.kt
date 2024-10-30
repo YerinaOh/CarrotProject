@@ -1,11 +1,11 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
+@file:OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3Api::class
 )
 
 package com.example.myapplication
 
-import android.app.LauncherActivity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -38,44 +38,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.myapplication.Favorate.FavoriteScreen
 import com.example.myapplication.Favorate.TopFavorateBar
 import com.example.myapplication.profile.TopProfileBar
 import com.example.myapplication.Home.HomeScreen
 import com.example.myapplication.Home.TopHomeBar
 import com.example.myapplication.profile.ProfileScreen
-import com.google.gson.Gson
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.IconButton
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import com.example.myapplication.Detail.DetailScreen
 import com.example.myapplication.Home.ListItem
-import java.net.URLDecoder
 
 enum class Screen(val route: String, val icon: ImageVector, val label: String) {
     Home("홈", Icons.Filled.Home, "홈"),
@@ -101,87 +90,39 @@ fun SimpleBottomTabApp() {
         var selectedItem by remember { mutableStateOf<ListItem?>(null) }
 
         if (selectedItem == null) {
-        Scaffold(
-            topBar = {
-                when (currentScreen) {
-                    Screen.Home -> TopHomeBar()
-                    Screen.Favorite -> TopFavorateBar()
-                    Screen.Profile -> TopProfileBar()
-                    else -> {}
+            Scaffold(
+                topBar = {
+                    when (currentScreen) {
+                        Screen.Home -> TopHomeBar()
+                        Screen.Favorite -> TopFavorateBar()
+                        Screen.Profile -> TopProfileBar()
+                    }
+                },
+                bottomBar = { BottomNavigationBar(navController) }
+            ) { innerPadding ->
+                NavHost(
+                    navController,
+                    startDestination = Screen.Home.route,
+                    Modifier.padding(innerPadding)
+                ) {
+                    composable(Screen.Home.route) {
+                        HomeScreen { item ->
+                            selectedItem = item
+                        }
+                    }
+                    composable(Screen.Favorite.route) { FavoriteScreen() }
+                    composable(Screen.Profile.route) { ProfileScreen() }
                 }
-            },
-            bottomBar = { BottomNavigationBar(navController) }
-        ) { innerPadding ->
-            NavHost(navController, startDestination = Screen.Home.route, Modifier.padding(innerPadding)) {
-                composable(Screen.Home.route) {
-                    HomeScreen { item ->
-                        selectedItem = item
+                // DetailView as an overlay
+                selectedItem?.let { item ->
+                    \(item) {
+                        selectedItem = null
                     }
                 }
-                composable(Screen.Favorite.route) { FavoriteScreen() }
-                composable(Screen.Profile.route) { ProfileScreen() }
             }
-            // DetailView as an overlay
-            selectedItem?.let { item ->
-                DetailScreen(item) {
-                    selectedItem = null
-                }
-            }
-        }
         } else {
             DetailScreen(selectedItem!!) {
                 selectedItem = null
-            }
-        }
-    }
-}
-
-@Composable
-fun DetailScreen(item: ListItem, onDismiss: () -> Unit) {
-    Scaffold(
-        topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-            ) {
-                IconButton(
-                    onClick = onDismiss,
-                    modifier = Modifier.align(Alignment.CenterStart)
-                ) {
-                    Icon(
-                        Icons.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White
-                    )
-                }
-            }
-        },
-        bottomBar = {
-            BottomBar(item)
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            Image(
-                painter = painterResource(id = item.imageUrl),
-                contentDescription = "Item Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-                contentScale = ContentScale.Crop
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(text = item.title, style = MaterialTheme.typography.h5)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = item.description, style = MaterialTheme.typography.body1)
             }
         }
     }
@@ -204,9 +145,8 @@ fun BottomBar(item: ListItem) {
                 painter = painterResource(id = R.drawable.icon_heart), // 실제 프로필 이미지로 교체 필요
                 contentDescription = "icon heart",
                 modifier = Modifier
-                    .size(30.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
+                    .size(30.dp),
+                contentScale = ContentScale.Fit
             )
             Column {
                 Text(
@@ -234,15 +174,28 @@ fun BottomBar(item: ListItem) {
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     BottomNavigation(
-        modifier = Modifier.height(80.dp),
+        modifier = Modifier.height(60.dp),
         backgroundColor = Color.White,
-        contentColor = Color.Black) {
+        contentColor = Color.Black
+    ) {
         val currentScreen by navController.currentScreenAsState()
 
         Screen.values().forEach { screen ->
             BottomNavigationItem(
-                icon = { Icon(screen.icon, contentDescription = screen.label) },
-                label = { Text(screen.label) },
+                icon = {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = screen.icon,
+                            contentDescription = screen.label,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = screen.label,
+                            style = MaterialTheme.typography.caption
+                        )
+                    }
+                },
                 selected = currentScreen == screen,
                 onClick = { navController.navigate(screen.route) },
                 selectedContentColor = Color.Black,
@@ -257,7 +210,8 @@ fun NavHostController.currentScreenAsState(): State<Screen> {
     val navBackStackEntry by currentBackStackEntryAsState()
     return remember(navBackStackEntry) {
         derivedStateOf {
-            Screen.values().find { it.route == navBackStackEntry?.destination?.route } ?: Screen.Home
+            Screen.values().find { it.route == navBackStackEntry?.destination?.route }
+                ?: Screen.Home
         }
     }
 }

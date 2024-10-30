@@ -1,6 +1,8 @@
 package com.example.myapplication.Home
 
+import android.telecom.Call.Details
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,11 +27,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.DetailScreen
+import com.example.myapplication.Detail.DetailScreen
 import com.example.myapplication.R
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -43,9 +46,9 @@ fun HomeScreen(onItemClick: (ListItem) -> Unit) {
     val sampleItems = List(10) { index ->
         ListItem(
             R.drawable.placeholder_image, // 실제 이미지 리소스로 교체 필요
-            "제목 ${index + 1}",
-            "이것은 아이템 ${index + 1}의 설명입니다. 여기에 추가 설명이 들어갑니다.",
-            "${(index + 1) * 10000}원"
+            "당근 ${index + 1}개 팔아요",
+            "당근을 샀는데 선물을 받아서 팝니다",
+            "10,000원"
         )
     }
 
@@ -66,7 +69,7 @@ fun HomeScreen(onItemClick: (ListItem) -> Unit) {
         }
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().background(Color.White)
         ) {
             // 배너 추가
             item {
